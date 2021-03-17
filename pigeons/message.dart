@@ -4,10 +4,15 @@ class StartRequest {
   String config;
 }
 
+class StatusReply {
+  int status;
+}
+
 @HostApi()
 abstract class V2rayApi {
   void start(StartRequest params);
   void stop();
+  StatusReply status();
 }
 
 // 输出配置

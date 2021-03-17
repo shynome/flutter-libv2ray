@@ -33,10 +33,30 @@ public class Message {
     }
   }
 
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class StatusReply {
+    private Long status;
+    public Long getStatus() { return status; }
+    public void setStatus(Long setterArg) { this.status = setterArg; }
+
+    Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("status", status);
+      return toMapResult;
+    }
+    static StatusReply fromMap(Map<String, Object> map) {
+      StatusReply fromMapResult = new StatusReply();
+      Object status = map.get("status");
+      fromMapResult.status = (status == null) ? null : ((status instanceof Integer) ? (Integer)status : (Long)status);
+      return fromMapResult;
+    }
+  }
+
   /** Generated interface from Pigeon that represents a handler of messages from Flutter.*/
   public interface V2rayApi {
     void start(StartRequest arg);
     void stop();
+    StatusReply status();
 
     /** Sets up an instance of `V2rayApi` to handle messages through the `binaryMessenger` */
     static void setup(BinaryMessenger binaryMessenger, V2rayApi api) {
@@ -70,6 +90,25 @@ public class Message {
             try {
               api.stop();
               wrapped.put("result", null);
+            }
+            catch (Exception exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.V2rayApi.status", new StandardMessageCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              StatusReply output = api.status();
+              wrapped.put("result", output.toMap());
             }
             catch (Exception exception) {
               wrapped.put("error", wrapError(exception));

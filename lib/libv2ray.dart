@@ -22,4 +22,10 @@ class Libv2ray {
     V2rayApi api = V2rayApi();
     await api.stop();
   }
+
+  static Future<int> status() async {
+    V2rayApi api = V2rayApi();
+    var replay = await api.status();
+    return replay.status;
+  }
 }

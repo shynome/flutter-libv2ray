@@ -32,6 +32,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
+  int _count = -2;
 
   @override
   void initState() {
@@ -84,6 +85,14 @@ class _MyAppState extends State<MyApp> {
                     await Libv2ray.stop();
                   },
                   child: Text("停止 v2ray")),
+              TextButton(
+                  onPressed: () async {
+                    var c = await Libv2ray.status();
+                    setState(() {
+                      _count = c;
+                    });
+                  },
+                  child: Text("当前状态 ${_count.toString()}")),
             ],
           ),
         ),

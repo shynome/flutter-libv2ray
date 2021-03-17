@@ -45,4 +45,10 @@ class Libv2rayPlugin: FlutterPlugin, MethodCallHandler, V2rayApi {
     Libv2ray.stop()
   }
 
+  override fun status(): StatusReply {
+    var reply = StatusReply()
+    reply.status = Libv2ray.status()
+    return reply
+  }
+
 }

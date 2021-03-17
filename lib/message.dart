@@ -23,6 +23,22 @@ class StartRequest {
   }
 }
 
+class StatusReply {
+  int status;
+
+  Object encode() {
+    final Map<Object, Object> pigeonMap = <Object, Object>{};
+    pigeonMap['status'] = status;
+    return pigeonMap;
+  }
+
+  static StatusReply decode(Object message) {
+    final Map<Object, Object> pigeonMap = message as Map<Object, Object>;
+    return StatusReply()
+      ..status = pigeonMap['status'] as int;
+  }
+}
+
 class V2rayApi {
   Future<void> start(StartRequest arg) async {
     final Object encoded = arg.encode();
@@ -66,6 +82,28 @@ class V2rayApi {
       );
     } else {
       // noop
+    }
+  }
+
+  Future<StatusReply> status() async {
+    const BasicMessageChannel<Object> channel =
+        BasicMessageChannel<Object>('dev.flutter.pigeon.V2rayApi.status', StandardMessageCodec());
+    final Map<Object, Object> replyMap = await channel.send(null) as Map<Object, Object>;
+    if (replyMap == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+        details: null,
+      );
+    } else if (replyMap['error'] != null) {
+      final Map<Object, Object> error = replyMap['error'] as Map<Object, Object>;
+      throw PlatformException(
+        code: error['code'] as String,
+        message: error['message'] as String,
+        details: error['details'],
+      );
+    } else {
+      return StatusReply.decode(replyMap['result']);
     }
   }
 }
