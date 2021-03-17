@@ -1,6 +1,6 @@
 name: libv2ray
 description: v2ray plugin for android
-version: 0.0.2
+version: 0.1.0
 homepage: https://github.com/shynome/flutter-libv2ray
 
 environment:
