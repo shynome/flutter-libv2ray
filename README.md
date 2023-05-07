@@ -1,3 +1,7 @@
+# Archive
+
+This project is too old to use, you should find another project.
+
 # libv2ray
 
 A new flutter plugin project.
